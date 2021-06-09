@@ -32,7 +32,7 @@ namespace VacationRental.Api.Tests
                 postRentalResult = await postRentalResponse.Content.ReadAsAsync<ResourceIdDto>();
             }
 
-            var postBooking1Request = new BookingBindingRequest
+            var postBooking1Request = new BookingRequest
             {
                  RentalId = postRentalResult.Id,
                  Nights = 2,
@@ -46,7 +46,7 @@ namespace VacationRental.Api.Tests
                 postBooking1Result = await postBooking1Response.Content.ReadAsAsync<ResourceIdDto>();
             }
 
-            var postBooking2Request = new BookingBindingRequest
+            var postBooking2Request = new BookingRequest
             {
                 RentalId = postRentalResult.Id,
                 Nights = 2,
