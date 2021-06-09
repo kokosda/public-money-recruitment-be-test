@@ -2,7 +2,7 @@
 
 namespace VacationRental.Api.Models
 {
-    public class BookingViewModel
+    public class BookingDto
     {
         public int Id { get; set; }
         public int RentalId { get; set; }

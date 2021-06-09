@@ -1,6 +1,6 @@
 ﻿namespace VacationRental.Api.Models
 {
-    public class RentalBindingModel
+    public class RentalRequest
     {
         public int Units { get; set; }
     }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace VacationRental.Api.Models
 {
-    public class CalendarDateViewModel
+    public class CalendarDateDto
     {
         public DateTime Date { get; set; }
-        public List<CalendarBookingViewModel> Bookings { get; set; }
+        public List<CalendarBookingDto> Bookings { get; set; }
     }
 }
