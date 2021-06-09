@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace VacationRental.Api.Models
 {
-    public class BookingBindingRequest
+    public class BookingRequest
     {
         public int RentalId { get; set; }
 
