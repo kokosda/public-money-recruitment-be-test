@@ -6,7 +6,7 @@ using VacationRental.Domain.Rentals;
 
 namespace VacationRental.Application.Rentals
 {
-    public class GetRentalQueryHandler : GenericQueryHandlerBase<GetRentalRequest, RentalDto>
+    public sealed class GetRentalQueryHandler : GenericQueryHandlerBase<GetRentalRequest, RentalDto>
     {
         private readonly IGenericRepository<Rental, int> _rentalRepository;
 
