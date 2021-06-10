@@ -21,7 +21,7 @@ namespace VacationRental.Api.Tests
         [Fact]
         public async Task GivenCompleteRequest_WhenGetCalendar_ThenAGetReturnsTheCalculatedCalendar()
         {
-            var postRentalRequest = new RentalRequest
+            var postRentalRequest = new PostRentalRequest
             {
                 Units = 2
             };

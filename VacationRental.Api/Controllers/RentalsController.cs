@@ -33,7 +33,7 @@ namespace VacationRental.Api.Controllers
         }
 
         [HttpPost]
-        public ResourceIdDto Post(RentalRequest model)
+        public ResourceIdDto Post(PostRentalRequest model)
         {
             var key = new ResourceIdDto { Id = _rentals.Keys.Count + 1 };
 
