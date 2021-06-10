@@ -9,6 +9,7 @@ namespace VacationRental.Application.DependencyInjection
 		public static IServiceCollection AddApplicationLevelServices(this IServiceCollection serviceCollection)
 		{
 			serviceCollection.AddSingleton<IGenericQueryHandler<GetRentalRequest, RentalDto>, GetRentalQueryHandler>();
+			serviceCollection.AddSingleton<IGenericCommandHandler<CreateRentalRequest, RentalDto>, CreateRentalCommandHandler>();
 			return serviceCollection;
 		}
 	}

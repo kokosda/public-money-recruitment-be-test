@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Models;
 using VacationRental.Application.Rentals;
 using VacationRental.Core.Handlers;
 
@@ -13,11 +14,15 @@ namespace VacationRental.Api.Controllers
     {
         private readonly IDictionary<int, RentalDto> _rentals;
         private readonly IGenericQueryHandler<GetRentalRequest, RentalDto> _getRentalQueryHandler;
+        private readonly IGenericCommandHandler<CreateRentalRequest, RentalDto> _createRentalCommandHandler;
 
-        public RentalsController(IDictionary<int, RentalDto> rentals, IGenericQueryHandler<GetRentalRequest, RentalDto> getRentalQueryHandler)
+        public RentalsController(IDictionary<int, RentalDto> rentals, 
+            IGenericQueryHandler<GetRentalRequest, RentalDto> getRentalQueryHandler,
+            IGenericCommandHandler<CreateRentalRequest, RentalDto> createRentalCommandHandler)
         {
             _rentals = rentals;
             _getRentalQueryHandler = getRentalQueryHandler;
+            _createRentalCommandHandler = createRentalCommandHandler;
         }
 
         [HttpGet]
@@ -33,17 +38,14 @@ namespace VacationRental.Api.Controllers
         }
 
         [HttpPost]
-        public ResourceIdDto Post(CreateRentalRequest model)
+        public async Task<ActionResult> Post(CreateRentalRequest model)
         {
-            var key = new ResourceIdDto { Id = _rentals.Keys.Count + 1 };
+            var responseContainer = await _createRentalCommandHandler.HandleAsync(model);
 
-            _rentals.Add(key.Id, new RentalDto
-            {
-                Id = key.Id,
-                Units = model.Units
-            });
+            if (!responseContainer.IsSuccess)
+                return StatusCode((int)HttpStatusCode.InternalServerError, responseContainer.Messages);
 
-            return key;
+            return Created(new Uri($"/{responseContainer.Value.Id}", UriKind.Relative), null);
         }
     }
 }
