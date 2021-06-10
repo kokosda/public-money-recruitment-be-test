@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using VacationRental.Core.Domain;
@@ -9,6 +10,7 @@ namespace VacationRental.Infrastructure.DataAccess
 	public sealed class GenericInMemoryRepository<T, TId> : IGenericRepository<T, TId> where T: EntityBase<TId>
 	{
 		private readonly IMemoryCache _memoryCache;
+		private readonly object _createSyncRoot = new object();
 
 		public GenericInMemoryRepository(IMemoryCache memoryCache)
 		{
@@ -19,18 +21,22 @@ namespace VacationRental.Infrastructure.DataAccess
 		{
 			if (entity == null)
 				throw new ArgumentNullException(nameof(entity));
+			
+			lock (_createSyncRoot)
+			{
+				TId id;
+				var last = _memoryCache.Get<T>($"{typeof(T).FullName}.Last");
 
-			TId id;
-			var last = _memoryCache.Get<T>($"{typeof(T).FullName}.Last");
+				if (last != null)
+					id = GetNextId(last.Id);
+				else
+					id = GetNextId(default(TId));
 
-			if (last != null)
-				id = GetNextId(last.Id);
-			else
-				id = GetNextId(default(TId));
-
-			entity.Id = id;
-			_memoryCache.Set($"{typeof(T).FullName}.Last", entity);
-			_memoryCache.Set($"{typeof(T).FullName}.{id}", entity);
+				entity.Id = id;
+				_memoryCache.Set($"{typeof(T).FullName}.Last", entity);
+				_memoryCache.Set($"{typeof(T).FullName}.{id}", entity);
+			}
+			
 			var result = Task.FromResult(entity);
 			return result;
 		}
