@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Models;
 using VacationRental.Application.Rentals;
+using VacationRental.Core.Handlers;
 
 namespace VacationRental.Api.Controllers
 {
@@ -11,20 +12,24 @@ namespace VacationRental.Api.Controllers
     public class RentalsController : ControllerBase
     {
         private readonly IDictionary<int, RentalDto> _rentals;
+        private readonly IGenericQueryHandler<GetRentalRequest, RentalDto> _getRentalQueryHandler;
 
-        public RentalsController(IDictionary<int, RentalDto> rentals)
+        public RentalsController(IDictionary<int, RentalDto> rentals, IGenericQueryHandler<GetRentalRequest, RentalDto> getRentalQueryHandler)
         {
             _rentals = rentals;
+            _getRentalQueryHandler = getRentalQueryHandler;
         }
 
         [HttpGet]
         [Route("{rentalId:int}")]
-        public RentalDto Get(int rentalId)
+        public async Task<ActionResult> Get([FromRoute] GetRentalRequest request)
         {
-            if (!_rentals.ContainsKey(rentalId))
-                throw new ApplicationException("Rental not found");
+            var responseContainer = await _getRentalQueryHandler.HandleAsync(request);
 
-            return _rentals[rentalId];
+            if (responseContainer.Value is null)
+                return NotFound(responseContainer.Messages);
+            
+            return new JsonResult(responseContainer.Value);
         }
 
         [HttpPost]

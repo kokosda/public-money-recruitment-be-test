@@ -6,7 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using VacationRental.Api.Models;
+using VacationRental.Application.DependencyInjection;
 using VacationRental.Application.Rentals;
+using VacationRental.Infrastructure.DependencyRegistrar;
 
 namespace VacationRental.Api
 {
@@ -28,6 +30,9 @@ namespace VacationRental.Api
 
             services.AddSingleton<IDictionary<int, RentalDto>>(new Dictionary<int, RentalDto>());
             services.AddSingleton<IDictionary<int, BookingDto>>(new Dictionary<int, BookingDto>());
+
+            services.AddInfrastructureLevelServices();
+            services.AddApplicationLevelServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
