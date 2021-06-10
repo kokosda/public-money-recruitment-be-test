@@ -21,7 +21,7 @@ namespace VacationRental.Api.Tests
         [Fact]
         public async Task GivenCompleteRequest_WhenPostBooking_ThenAGetReturnsTheCreatedBooking()
         {
-            var postRentalRequest = new PostRentalRequest
+            var postRentalRequest = new CreateRentalRequest
             {
                 Units = 4
             };
@@ -61,7 +61,7 @@ namespace VacationRental.Api.Tests
         [Fact]
         public async Task GivenCompleteRequest_WhenPostBooking_ThenAPostReturnsErrorWhenThereIsOverbooking()
         {
-            var postRentalRequest = new PostRentalRequest
+            var postRentalRequest = new CreateRentalRequest
             {
                 Units = 1
             };

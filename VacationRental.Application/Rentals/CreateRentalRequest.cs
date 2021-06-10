@@ -1,6 +1,6 @@
 ﻿namespace VacationRental.Application.Rentals
 {
-    public class PostRentalRequest
+    public sealed class CreateRentalRequest
     {
         public int Units { get; set; }
     }

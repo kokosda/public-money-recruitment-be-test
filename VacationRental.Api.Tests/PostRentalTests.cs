@@ -21,7 +21,7 @@ namespace VacationRental.Api.Tests
         [Fact]
         public async Task GivenCompleteRequest_WhenPostRental_ThenAGetReturnsTheCreatedRental()
         {
-            var request = new PostRentalRequest
+            var request = new CreateRentalRequest
             {
                 Units = 25
             };
