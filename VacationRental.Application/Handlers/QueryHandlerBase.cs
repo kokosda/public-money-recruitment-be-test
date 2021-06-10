@@ -9,7 +9,7 @@ namespace VacationRental.Application.Handlers
 	{
 		public async Task<IResponseContainer> HandleAsync(T query)
 		{
-			if (query is null)
+			if (query == null)
 				throw new ArgumentNullException(nameof(query));
 
 			var result = await GetResultAsync(query);

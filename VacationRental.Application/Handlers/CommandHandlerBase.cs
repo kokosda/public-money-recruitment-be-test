@@ -9,7 +9,7 @@ namespace VacationRental.Application.Handlers
 	{
 		public async Task<IResponseContainer> HandleAsync(T command)
 		{
-			if (command is null)
+			if (command == null)
 				throw new ArgumentNullException(nameof(command));
 
 			var result = await GetResultAsync(command);
