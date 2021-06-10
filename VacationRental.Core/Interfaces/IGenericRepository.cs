@@ -5,9 +5,9 @@ namespace VacationRental.Core.Interfaces
 {
 	public interface IGenericRepository<T, TId> where T: EntityBase<TId>
 	{
-		Task<T> CreateAsync(EntityBase<TId> entity);
+		Task<T> CreateAsync(T entity);
 		Task<T> GetAsync(TId id);
-		Task UpdateAsync(EntityBase<TId> entity);
+		Task UpdateAsync(T entity);
 		Task DeleteAsync(TId id);
 	}
 }
