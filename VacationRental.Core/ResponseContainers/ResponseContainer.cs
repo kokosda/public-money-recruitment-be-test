@@ -11,7 +11,7 @@ namespace VacationRental.Core.ResponseContainers
 		public bool IsSuccess
 		{
 			get => _isSuccess;
-			set => _isSuccess = value;
+			protected set => _isSuccess = value;
 		}
 
 		public string Messages => string.Join(Environment.NewLine, MessagesList);
