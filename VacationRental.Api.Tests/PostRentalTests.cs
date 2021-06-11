@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VacationRental.Api.Models;
@@ -26,14 +25,16 @@ namespace VacationRental.Api.Tests
                 Units = 25
             };
 
-            ResourceIdDto postResult;
+            var rentalId = 0;
             using (var postResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", request))
             {
                 Assert.True(postResponse.IsSuccessStatusCode);
-                postResult = await postResponse.Content.ReadAsAsync<ResourceIdDto>();
+                Assert.NotNull(postResponse.Headers.Location);
+                rentalId = int.Parse(postResponse.Headers.Location.ToString().Split('/').Last());
+                Assert.True(rentalId > 0);
             }
 
-            using (var getResponse = await _client.GetAsync($"/api/v1/rentals/{postResult.Id}"))
+            using (var getResponse = await _client.GetAsync($"/api/v1/rentals/{rentalId}"))
             {
                 Assert.True(getResponse.IsSuccessStatusCode);
 

@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using VacationRental.Api.Models;
 using VacationRental.Application.Bookings;
 using VacationRental.Application.Rentals;
 using Xunit;
@@ -27,28 +27,32 @@ namespace VacationRental.Api.Tests
                 Units = 4
             };
 
-            ResourceIdDto postRentalResult;
+            var rentalId = 0;
             using (var postRentalResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", postRentalRequest))
             {
                 Assert.True(postRentalResponse.IsSuccessStatusCode);
-                postRentalResult = await postRentalResponse.Content.ReadAsAsync<ResourceIdDto>();
+                Assert.NotNull(postRentalResponse.Headers.Location);
+                rentalId = int.Parse(postRentalResponse.Headers.Location.ToString().Split('/').Last());
+                Assert.True(rentalId > 0);
             }
 
             var postBookingRequest = new CreateBookingRequest
             {
-                 RentalId = postRentalResult.Id,
+                 RentalId = rentalId,
                  Nights = 3,
                  Start = new DateTime(2001, 01, 01)
             };
 
-            ResourceIdDto postBookingResult;
+            var bookingId = 0;
             using (var postBookingResponse = await _client.PostAsJsonAsync($"/api/v1/bookings", postBookingRequest))
             {
                 Assert.True(postBookingResponse.IsSuccessStatusCode);
-                postBookingResult = await postBookingResponse.Content.ReadAsAsync<ResourceIdDto>();
+                Assert.NotNull(postBookingResponse.Headers.Location);
+                bookingId = int.Parse(postBookingResponse.Headers.Location.ToString().Split('/').Last());
+                Assert.True(bookingId > 0);
             }
 
-            using (var getBookingResponse = await _client.GetAsync($"/api/v1/bookings/{postBookingResult.Id}"))
+            using (var getBookingResponse = await _client.GetAsync($"/api/v1/bookings/{bookingId}"))
             {
                 Assert.True(getBookingResponse.IsSuccessStatusCode);
 
@@ -67,16 +71,18 @@ namespace VacationRental.Api.Tests
                 Units = 1
             };
 
-            ResourceIdDto postRentalResult;
+            var rentalId = 0;
             using (var postRentalResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", postRentalRequest))
             {
                 Assert.True(postRentalResponse.IsSuccessStatusCode);
-                postRentalResult = await postRentalResponse.Content.ReadAsAsync<ResourceIdDto>();
+                Assert.NotNull(postRentalResponse.Headers.Location);
+                rentalId = int.Parse(postRentalResponse.Headers.Location.ToString().Split('/').Last());
+                Assert.True(rentalId > 0);
             }
 
             var postBooking1Request = new CreateBookingRequest
             {
-                RentalId = postRentalResult.Id,
+                RentalId = rentalId,
                 Nights = 3,
                 Start = new DateTime(2002, 01, 01)
             };
@@ -88,17 +94,15 @@ namespace VacationRental.Api.Tests
 
             var postBooking2Request = new CreateBookingRequest
             {
-                RentalId = postRentalResult.Id,
+                RentalId = rentalId,
                 Nights = 1,
                 Start = new DateTime(2002, 01, 02)
             };
-
-            await Assert.ThrowsAsync<ApplicationException>(async () =>
+            
+            using (var postBooking2Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking2Request))
             {
-                using (var postBooking2Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking2Request))
-                {
-                }
-            });
+                Assert.Equal(HttpStatusCode.UnprocessableEntity, postBooking2Response.StatusCode);
+            }
         }
     }
 }
