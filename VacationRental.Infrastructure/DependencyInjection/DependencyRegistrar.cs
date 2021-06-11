@@ -2,7 +2,7 @@
 using VacationRental.Core.Interfaces;
 using VacationRental.Infrastructure.DataAccess;
 
-namespace VacationRental.Infrastructure.DependencyRegistrar
+namespace VacationRental.Infrastructure.DependencyInjection
 {
 	public static class DependencyRegistrar
 	{
