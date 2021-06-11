@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Models;
 using VacationRental.Application.Bookings;
 using VacationRental.Application.Rentals;
 using VacationRental.Core.Handlers;
+using VacationRental.Domain.Bookings;
 
 namespace VacationRental.Api.Controllers
 {
@@ -13,18 +13,15 @@ namespace VacationRental.Api.Controllers
     [ApiController]
     public class BookingsController : ControllerBase
     {
-        private readonly IDictionary<int, RentalDto> _rentals;
-        private readonly IDictionary<int, BookingDto> _bookings;
         private readonly IGenericQueryHandler<GetBookingRequest, BookingDto> _getBookingQueryHandler;
+        private readonly IGenericCommandHandler<CreateBookingRequest, BookingDto> _createBookingCommandHandler;
 
         public BookingsController(
-            IDictionary<int, RentalDto> rentals,
-            IDictionary<int, BookingDto> bookings,
-            IGenericQueryHandler<GetBookingRequest, BookingDto> getBookingQueryHandler)
+            IGenericQueryHandler<GetBookingRequest, BookingDto> getBookingQueryHandler,
+            IGenericCommandHandler<CreateBookingRequest, BookingDto> createBookingCommandHandler)
         {
-            _rentals = rentals;
-            _bookings = bookings;
             _getBookingQueryHandler = getBookingQueryHandler;
+            _createBookingCommandHandler = createBookingCommandHandler;
         }
 
         [HttpGet]
@@ -40,42 +37,14 @@ namespace VacationRental.Api.Controllers
         }
 
         [HttpPost]
-        public ResourceIdDto Post(CreateBookingRequest request)
+        public async Task<ActionResult> Post(CreateBookingRequest request)
         {
-            if (request.Nights <= 0)
-                throw new ApplicationException("Nigts must be positive");
-            if (!_rentals.ContainsKey(request.RentalId))
-                throw new ApplicationException("Rental not found");
+            var responseContainer = await _createBookingCommandHandler.HandleAsync(request);
 
-            for (var i = 0; i < request.Nights; i++)
-            {
-                var count = 0;
-                foreach (var booking in _bookings.Values)
-                {
-                    if (booking.RentalId == request.RentalId
-                        && (booking.Start <= request.Start.Date && booking.Start.AddDays(booking.Nights) > request.Start.Date)
-                        || (booking.Start < request.Start.AddDays(request.Nights) && booking.Start.AddDays(booking.Nights) >= request.Start.AddDays(request.Nights))
-                        || (booking.Start > request.Start && booking.Start.AddDays(booking.Nights) < request.Start.AddDays(request.Nights)))
-                    {
-                        count++;
-                    }
-                }
-                if (count >= _rentals[request.RentalId].Units)
-                    throw new ApplicationException("Not available");
-            }
-
-
-            var key = new ResourceIdDto { Id = _bookings.Keys.Count + 1 };
-
-            _bookings.Add(key.Id, new BookingDto
-            {
-                Id = key.Id,
-                Nights = request.Nights,
-                RentalId = request.RentalId,
-                Start = request.Start.Date
-            });
-
-            return key;
+            if (!responseContainer.IsSuccess)
+                return UnprocessableEntity(responseContainer.Messages);
+            
+            return Created(new Uri($"/{responseContainer.Value.Id}", UriKind.Relative), null);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Threading;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using VacationRental.Core.Domain;
@@ -7,14 +7,17 @@ using VacationRental.Core.Interfaces;
 
 namespace VacationRental.Infrastructure.DataAccess
 {
-	public sealed class GenericInMemoryRepository<T, TId> : IGenericRepository<T, TId> where T: EntityBase<TId>
+	public class GenericInMemoryRepository<T, TId> : IGenericRepository<T, TId> where T: EntityBase<TId>
 	{
-		private readonly IMemoryCache _memoryCache;
+		protected const string EntityPrefix = "Entity";
+		private const string ServiceEntityPrefix = "ServiceEntity";
+		protected readonly IMemoryCache MemoryCache;
+		protected readonly List<string> Keys = new List<string>();
 		private readonly object _createSyncRoot = new object();
 
 		public GenericInMemoryRepository(IMemoryCache memoryCache)
 		{
-			_memoryCache = memoryCache;
+			MemoryCache = memoryCache;
 		}
 		
 		public Task<T> CreateAsync(T entity)
@@ -25,7 +28,8 @@ namespace VacationRental.Infrastructure.DataAccess
 			lock (_createSyncRoot)
 			{
 				TId id;
-				var last = _memoryCache.Get<T>($"{typeof(T).FullName}.Last");
+				var lastKey = GetKey<T, string>(ServiceEntityPrefix,"Last");
+				var last = MemoryCache.Get<T>(lastKey);
 
 				if (last != null)
 					id = GetNextId(last.Id);
@@ -33,8 +37,11 @@ namespace VacationRental.Infrastructure.DataAccess
 					id = GetNextId(default(TId));
 
 				entity.Id = id;
-				_memoryCache.Set($"{typeof(T).FullName}.Last", entity);
-				_memoryCache.Set($"{typeof(T).FullName}.{id}", entity);
+				MemoryCache.Set(lastKey, entity);
+				
+				var key = GetKey<T, TId>(EntityPrefix, id);
+				MemoryCache.Set(key, entity);
+				Keys.Add(key);
 			}
 			
 			var result = Task.FromResult(entity);
@@ -43,7 +50,8 @@ namespace VacationRental.Infrastructure.DataAccess
 
 		public Task<T> GetAsync(TId id)
 		{
-			var result = Task.FromResult(_memoryCache.Get<T>($"{typeof(T).FullName}.{id}"));
+			var key = GetKey<T, TId>(EntityPrefix, id);
+			var result = Task.FromResult(MemoryCache.Get<T>(key));
 			return result;
 		}
 
@@ -55,6 +63,12 @@ namespace VacationRental.Infrastructure.DataAccess
 		public Task DeleteAsync(TId id)
 		{
 			throw new System.NotImplementedException();
+		}
+
+		private string GetKey<TEntity, TId2>(string prefix, TId2 id)
+		{
+			var result = $"{prefix}.{typeof(TEntity).FullName}.{id}";
+			return result;
 		}
 
 		private TId GetNextId(dynamic id)
