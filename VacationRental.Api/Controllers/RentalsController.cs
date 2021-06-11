@@ -43,7 +43,7 @@ namespace VacationRental.Api.Controllers
             var responseContainer = await _createRentalCommandHandler.HandleAsync(model);
 
             if (!responseContainer.IsSuccess)
-                return StatusCode((int)HttpStatusCode.UnprocessableEntity, responseContainer.Messages);
+                return UnprocessableEntity(responseContainer.Messages);
 
             return Created(new Uri($"/{responseContainer.Value.Id}", UriKind.Relative), null);
         }
