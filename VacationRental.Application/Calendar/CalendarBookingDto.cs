@@ -2,6 +2,6 @@
 {
     public class CalendarBookingDto
     {
-        public int Id { get; set; }
+        public int BookingId { get; set; }
     }
 }

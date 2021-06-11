@@ -9,17 +9,17 @@ namespace VacationRental.Api.Controllers
     [ApiController]
     public class CalendarController : ControllerBase
     {
-        private readonly IGenericQueryHandler<GetCalendarRequest, CalendarDto> _calendarQueryHandler;
+        private readonly IGenericQueryHandler<GetCalendarRequest, CalendarDto> _getCalendarQueryHandler;
 
-        public CalendarController(IGenericQueryHandler<GetCalendarRequest, CalendarDto> calendarQueryHandler)
+        public CalendarController(IGenericQueryHandler<GetCalendarRequest, CalendarDto> getCalendarQueryHandler)
         {
-            _calendarQueryHandler = calendarQueryHandler;
+            _getCalendarQueryHandler = getCalendarQueryHandler;
         }
 
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetCalendarRequest request)
         {
-            var responseContainer = await _calendarQueryHandler.HandleAsync(request);
+            var responseContainer = await _getCalendarQueryHandler.HandleAsync(request);
 
             if (!responseContainer.IsSuccess)
                 return UnprocessableEntity(responseContainer.Messages);

@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using VacationRental.Application.Handlers;
 using VacationRental.Core.Interfaces;
 using VacationRental.Core.ResponseContainers;
-using VacationRental.Domain.Bookings;
+using VacationRental.Domain.Calendars;
 using VacationRental.Domain.Rentals;
 
 namespace VacationRental.Application.Calendar
@@ -11,14 +10,15 @@ namespace VacationRental.Application.Calendar
     public sealed class GetCalendarQueryHandler : GenericQueryHandlerBase<GetCalendarRequest, CalendarDto>
     {
         private readonly IGenericRepository<Rental, int> _rentalRepository;
-        private readonly IBookingRepository _bookingRepository;
+        private readonly ICalendarFactory _calendarFactory;
 
         public GetCalendarQueryHandler(
             IGenericRepository<Rental, int> rentalRepository,
-            IBookingRepository bookingRepository)
+            ICalendarFactory calendarFactory
+        )
         {
             _rentalRepository = rentalRepository;
-            _bookingRepository = bookingRepository;
+            _calendarFactory = calendarFactory;
         }
 
         protected override async Task<IResponseContainerWithValue<CalendarDto>> GetResultAsync(GetCalendarRequest query)
@@ -32,33 +32,15 @@ namespace VacationRental.Application.Calendar
                 return result;
             }
 
-            var calendarDto = new CalendarDto 
+            var responseContainer = await _calendarFactory.CreateCalendar(rental, query.Start, query.Nights);
+
+            if (!responseContainer.IsSuccess)
             {
-                RentalId = rental.Id,
-                Dates = new List<CalendarDateDto>() 
-            };
-
-            var bookings = _bookingRepository.GetBookingsByRentalId(rental.Id);
-            
-            for (var i = 0; i < query.Nights; i++)
-            {
-                var date = new CalendarDateDto
-                {
-                    Date = query.Start.Date.AddDays(i),
-                    Bookings = new List<CalendarBookingDto>()
-                };
-
-                foreach (var booking in bookings)
-                {
-                    if (booking.StartDate <= date.Date && booking.StartDate.AddDays(booking.Nights) > date.Date)
-                    {
-                        date.Bookings.Add(new CalendarBookingDto { Id = booking.Id });
-                    }
-                }
-
-                calendarDto.Dates.Add(date);
+                result.JoinWith(responseContainer);
+                return result;
             }
 
+            var calendarDto = responseContainer.Value.ToDto();
             result.SetSuccessValue(calendarDto);
             return result;
         }

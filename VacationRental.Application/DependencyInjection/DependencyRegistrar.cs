@@ -4,6 +4,7 @@ using VacationRental.Application.Calendar;
 using VacationRental.Application.Rentals;
 using VacationRental.Core.Handlers;
 using VacationRental.Domain.Bookings;
+using VacationRental.Domain.Calendars;
 
 namespace VacationRental.Application.DependencyInjection
 {
@@ -17,6 +18,7 @@ namespace VacationRental.Application.DependencyInjection
 			serviceCollection.AddSingleton<IGenericCommandHandler<CreateRentalRequest, RentalDto>, CreateRentalCommandHandler>();
 			serviceCollection.AddSingleton<IGenericCommandHandler<CreateBookingRequest, BookingDto>, CreateBookingCommandHandler>();
 			serviceCollection.AddSingleton<IBookingFactory, BookingFactory>();
+			serviceCollection.AddSingleton<ICalendarFactory, CalendarFactory>();
 			return serviceCollection;
 		}
 	}
