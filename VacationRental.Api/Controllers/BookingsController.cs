@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Application.Bookings;
-using VacationRental.Application.Rentals;
 using VacationRental.Core.Handlers;
-using VacationRental.Domain.Bookings;
 
 namespace VacationRental.Api.Controllers
 {

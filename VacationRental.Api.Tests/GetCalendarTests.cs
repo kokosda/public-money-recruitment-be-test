@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using VacationRental.Api.Models;
 using VacationRental.Application.Bookings;
+using VacationRental.Application.Calendar;
 using VacationRental.Application.Rentals;
 using Xunit;
 

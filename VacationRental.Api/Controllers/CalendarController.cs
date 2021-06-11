@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Models;
 using VacationRental.Application.Bookings;
+using VacationRental.Application.Calendar;
 using VacationRental.Application.Rentals;
 
 namespace VacationRental.Api.Controllers
@@ -23,7 +24,7 @@ namespace VacationRental.Api.Controllers
         }
 
         [HttpGet]
-        public CalendarDto Get(int rentalId, DateTime start, int nights)
+        public CalendarDto Get(GetBookingRequest request)
         {
             if (nights < 0)
                 throw new ApplicationException("Nights must be positive");
