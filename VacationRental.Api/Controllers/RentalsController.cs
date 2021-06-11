@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Application.Rentals;
@@ -45,7 +44,7 @@ namespace VacationRental.Api.Controllers
             if (!responseContainer.IsSuccess)
                 return UnprocessableEntity(responseContainer.Messages);
 
-            return Created(new Uri($"/{responseContainer.Value.Id}", UriKind.Relative), null);
+            return Created(new Uri($"/rentals/{responseContainer.Value.Id}", UriKind.Relative), null);
         }
     }
 }
