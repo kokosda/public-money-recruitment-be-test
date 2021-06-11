@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace VacationRental.Application.Bookings
 {
-    public sealed class BookingRequest
+    public sealed class CreateBookingRequest
     {
         private DateTime _startIgnoreTime;
         

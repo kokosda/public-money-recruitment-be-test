@@ -40,7 +40,7 @@ namespace VacationRental.Api.Controllers
         }
 
         [HttpPost]
-        public ResourceIdDto Post(BookingRequest request)
+        public ResourceIdDto Post(CreateBookingRequest request)
         {
             if (request.Nights <= 0)
                 throw new ApplicationException("Nigts must be positive");

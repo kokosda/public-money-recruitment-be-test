@@ -34,7 +34,7 @@ namespace VacationRental.Api.Tests
                 postRentalResult = await postRentalResponse.Content.ReadAsAsync<ResourceIdDto>();
             }
 
-            var postBookingRequest = new BookingRequest
+            var postBookingRequest = new CreateBookingRequest
             {
                  RentalId = postRentalResult.Id,
                  Nights = 3,
@@ -74,7 +74,7 @@ namespace VacationRental.Api.Tests
                 postRentalResult = await postRentalResponse.Content.ReadAsAsync<ResourceIdDto>();
             }
 
-            var postBooking1Request = new BookingRequest
+            var postBooking1Request = new CreateBookingRequest
             {
                 RentalId = postRentalResult.Id,
                 Nights = 3,
@@ -86,7 +86,7 @@ namespace VacationRental.Api.Tests
                 Assert.True(postBooking1Response.IsSuccessStatusCode);
             }
 
-            var postBooking2Request = new BookingRequest
+            var postBooking2Request = new CreateBookingRequest
             {
                 RentalId = postRentalResult.Id,
                 Nights = 1,
