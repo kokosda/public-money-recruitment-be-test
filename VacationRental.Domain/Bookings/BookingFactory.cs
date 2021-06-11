@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using VacationRental.Core.Interfaces;
 using VacationRental.Core.ResponseContainers;
 using VacationRental.Domain.Rentals;
@@ -14,14 +15,14 @@ namespace VacationRental.Domain.Bookings
             _bookingRepository = bookingRepository;
         }
         
-        public IResponseContainerWithValue<Booking> CreateBooking(Rental rental, DateTime startDate, int nights)
+        public async Task<IResponseContainerWithValue<Booking>> CreateBooking(Rental rental, DateTime startDate, int nights)
         {
-            if (rental == null) 
+            if (rental == null)
                 throw new ArgumentNullException(nameof(rental));
 
             var result = new ResponseContainerWithValue<Booking>();
             var createBookingSpecification = new CreateBookingSpecification(startDate.Date, nights);
-            var bookings = _bookingRepository.GetBookingsByRentalId(rental.Id);
+            var bookings = await _bookingRepository.GetBookingsByRentalIdAsync(rental.Id);
             
             for (var i = 0; i < nights; i++)
             {

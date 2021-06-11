@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using VacationRental.Domain.Bookings;
 
@@ -11,12 +12,12 @@ namespace VacationRental.Infrastructure.DataAccess
         {
         }
 
-        public List<Booking> GetBookingsByRentalId(int rentalId)
+        public Task<List<Booking>> GetBookingsByRentalIdAsync(int rentalId)
         {
             var result = Keys.Where(k => k.StartsWith($"{EntityPrefix}."))
                 .Select(k => MemoryCache.Get<Booking>(k))
                 .ToList();
-            return result;
+            return Task.FromResult(result);
         }
     }
 }

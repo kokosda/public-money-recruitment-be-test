@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using VacationRental.Core.Interfaces;
 
 namespace VacationRental.Domain.Bookings
 {
     public interface IBookingRepository : IGenericRepository<Booking, int>
     {
-        List<Booking> GetBookingsByRentalId(int rentalId);
+        Task<List<Booking>> GetBookingsByRentalIdAsync(int rentalId);
     }
 }

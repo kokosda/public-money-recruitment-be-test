@@ -35,7 +35,7 @@ namespace VacationRental.Application.Bookings
                 return result;
             }
 
-            var responseContainer = _bookingFactory.CreateBooking(rental, command.Start, command.Nights);
+            var responseContainer = await _bookingFactory.CreateBooking(rental, command.Start, command.Nights);
 
             if (!responseContainer.IsSuccess)
                 result.JoinWith(responseContainer);
