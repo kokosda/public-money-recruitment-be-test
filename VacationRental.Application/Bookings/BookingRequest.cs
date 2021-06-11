@@ -3,8 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace VacationRental.Application.Bookings
 {
-    public class BookingRequest
+    public sealed class BookingRequest
     {
+        private DateTime _startIgnoreTime;
+        
         public int RentalId { get; set; }
 
         public DateTime Start
@@ -13,8 +15,6 @@ namespace VacationRental.Application.Bookings
             set => _startIgnoreTime = value.Date;
         }
 
-        private DateTime _startIgnoreTime;
-        
         [Range(1, int.MaxValue)]
         public int Nights { get; set; }
     }
