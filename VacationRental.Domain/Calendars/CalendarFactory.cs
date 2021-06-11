@@ -39,9 +39,11 @@ namespace VacationRental.Domain.Calendars
                     CalendarBookings = new List<CalendarBooking>()
                 };
 
+                var createCalendarBookingSpecification = new CreateCalendarBookingSpecification(calendarDate);
+
                 foreach (var booking in bookings)
                 {
-                    if (new CreateCalendarBookingSpecification(calendarDate).IsSatisfiedBy(booking).Result.IsSuccess)
+                    if (createCalendarBookingSpecification.IsSatisfiedBy(booking).Result.IsSuccess)
                     {
                         calendarDate.CalendarBookings.Add(new CalendarBooking { BookingId = booking.Id });
                     }
