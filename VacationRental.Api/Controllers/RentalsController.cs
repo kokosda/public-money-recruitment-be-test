@@ -11,15 +11,14 @@ namespace VacationRental.Api.Controllers
     [ApiController]
     public class RentalsController : ControllerBase
     {
-        private readonly IDictionary<int, RentalDto> _rentals;
         private readonly IGenericQueryHandler<GetRentalRequest, RentalDto> _getRentalQueryHandler;
         private readonly IGenericCommandHandler<CreateRentalRequest, RentalDto> _createRentalCommandHandler;
 
-        public RentalsController(IDictionary<int, RentalDto> rentals, 
+        public RentalsController(
             IGenericQueryHandler<GetRentalRequest, RentalDto> getRentalQueryHandler,
-            IGenericCommandHandler<CreateRentalRequest, RentalDto> createRentalCommandHandler)
+            IGenericCommandHandler<CreateRentalRequest, RentalDto> createRentalCommandHandler
+        )
         {
-            _rentals = rentals;
             _getRentalQueryHandler = getRentalQueryHandler;
             _createRentalCommandHandler = createRentalCommandHandler;
         }

@@ -15,7 +15,8 @@ namespace VacationRental.Api.Controllers
 
         public BookingsController(
             IGenericQueryHandler<GetBookingRequest, BookingDto> getBookingQueryHandler,
-            IGenericCommandHandler<CreateBookingRequest, BookingDto> createBookingCommandHandler)
+            IGenericCommandHandler<CreateBookingRequest, BookingDto> createBookingCommandHandler
+        )
         {
             _getBookingQueryHandler = getBookingQueryHandler;
             _createBookingCommandHandler = createBookingCommandHandler;

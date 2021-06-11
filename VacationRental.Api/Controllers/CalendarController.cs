@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Models;
-using VacationRental.Application.Bookings;
 using VacationRental.Application.Calendar;
-using VacationRental.Application.Rentals;
+using VacationRental.Core.Handlers;
 
 namespace VacationRental.Api.Controllers
 {
@@ -12,51 +9,22 @@ namespace VacationRental.Api.Controllers
     [ApiController]
     public class CalendarController : ControllerBase
     {
-        private readonly IDictionary<int, RentalDto> _rentals;
-        private readonly IDictionary<int, BookingDto> _bookings;
+        private readonly IGenericQueryHandler<GetCalendarRequest, CalendarDto> _calendarQueryHandler;
 
-        public CalendarController(
-            IDictionary<int, RentalDto> rentals,
-            IDictionary<int, BookingDto> bookings)
+        public CalendarController(IGenericQueryHandler<GetCalendarRequest, CalendarDto> calendarQueryHandler)
         {
-            _rentals = rentals;
-            _bookings = bookings;
+            _calendarQueryHandler = calendarQueryHandler;
         }
 
         [HttpGet]
-        public CalendarDto Get(GetBookingRequest request)
+        public async Task<ActionResult> Get([FromQuery] GetCalendarRequest request)
         {
-            if (nights < 0)
-                throw new ApplicationException("Nights must be positive");
-            if (!_rentals.ContainsKey(rentalId))
-                throw new ApplicationException("Rental not found");
+            var responseContainer = await _calendarQueryHandler.HandleAsync(request);
 
-            var result = new CalendarDto 
-            {
-                RentalId = rentalId,
-                Dates = new List<CalendarDateDto>() 
-            };
-            for (var i = 0; i < nights; i++)
-            {
-                var date = new CalendarDateDto
-                {
-                    Date = start.Date.AddDays(i),
-                    Bookings = new List<CalendarBookingDto>()
-                };
+            if (!responseContainer.IsSuccess)
+                return UnprocessableEntity(responseContainer.Messages);
 
-                foreach (var booking in _bookings.Values)
-                {
-                    if (booking.RentalId == rentalId
-                        && booking.Start <= date.Date && booking.Start.AddDays(booking.Nights) > date.Date)
-                    {
-                        date.Bookings.Add(new CalendarBookingDto { Id = booking.Id });
-                    }
-                }
-
-                result.Dates.Add(date);
-            }
-
-            return result;
+            return new JsonResult(responseContainer.Value);
         }
     }
 }

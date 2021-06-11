@@ -28,9 +28,6 @@ namespace VacationRental.Api
 
             services.AddSwaggerGen(opts => opts.SwaggerDoc("v1", new Info { Title = "Vacation rental information", Version = "v1" }));
 
-            services.AddSingleton<IDictionary<int, RentalDto>>(new Dictionary<int, RentalDto>());
-            services.AddSingleton<IDictionary<int, BookingDto>>(new Dictionary<int, BookingDto>());
-
             services.AddInfrastructureLevelServices();
             services.AddApplicationLevelServices();
         }
