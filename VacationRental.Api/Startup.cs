@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using VacationRental.Api.Models;
+using VacationRental.Application.Bookings;
 using VacationRental.Application.DependencyInjection;
 using VacationRental.Application.Rentals;
 using VacationRental.Infrastructure.DependencyRegistrar;
