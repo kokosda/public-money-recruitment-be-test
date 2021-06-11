@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using VacationRental.Api.Models;
 using VacationRental.Application.Bookings;
 using VacationRental.Application.Calendar;
 using VacationRental.Application.Rentals;
@@ -28,7 +27,6 @@ namespace VacationRental.Api.Tests
                 Units = 2
             };
 
-            ResourceIdDto postRentalResult;
             var rentalId = 0;
 
             using (var postRentalResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", postRentalRequest))
