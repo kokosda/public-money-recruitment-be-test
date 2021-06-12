@@ -14,15 +14,15 @@ namespace VacationRental.Domain.Calendars
             _calendarDate = calendarDate;
         }
         
-        public Task<IResponseContainer> IsSatisfiedBy(Booking booking)
+        public IResponseContainer IsSatisfiedBy(Booking booking)
         {
             var result = new ResponseContainer();
             
             if (booking.StartDate <= _calendarDate.Date && booking.StartDate.AddDays(booking.Nights) > _calendarDate.Date)
-                return Task.FromResult(result.AsInterface());
+                return result;
             
             result.AddErrorMessage("Calendar date does not belong to the booking date range.");
-            return Task.FromResult(result.AsInterface());
+            return result;
         }
     }
 }

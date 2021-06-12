@@ -15,7 +15,7 @@ namespace VacationRental.Domain.Tests
             var spec = new BookingIntersectsWithDateRangeSpecification(DateTime.UtcNow.Date, 5);
 
             // Act
-            var result = spec.IsSatisfiedBy(booking).Result.IsSuccess;
+            var result = spec.IsSatisfiedBy(booking).IsSuccess;
 
             // Assert
             Assert.True(result);
@@ -29,7 +29,7 @@ namespace VacationRental.Domain.Tests
             var spec = new BookingIntersectsWithDateRangeSpecification(DateTime.UtcNow.Date.AddDays(1), 5);
 
             // Act
-            var result = spec.IsSatisfiedBy(booking).Result.IsSuccess;
+            var result = spec.IsSatisfiedBy(booking).IsSuccess;
 
             // Assert
             Assert.True(result);
@@ -43,7 +43,7 @@ namespace VacationRental.Domain.Tests
             var spec = new BookingIntersectsWithDateRangeSpecification(DateTime.UtcNow.Date.AddDays(3), 8);
 
             // Act
-            var result = spec.IsSatisfiedBy(booking).Result.IsSuccess;
+            var result = spec.IsSatisfiedBy(booking).IsSuccess;
 
             // Assert
             Assert.True(result);
@@ -57,7 +57,7 @@ namespace VacationRental.Domain.Tests
             var spec = new BookingIntersectsWithDateRangeSpecification(DateTime.UtcNow.Date, 4);
 
             // Act
-            var result = spec.IsSatisfiedBy(booking).Result.IsSuccess;
+            var result = spec.IsSatisfiedBy(booking).IsSuccess;
 
             // Assert
             Assert.False(result);
@@ -71,7 +71,7 @@ namespace VacationRental.Domain.Tests
             var spec = new BookingIntersectsWithDateRangeSpecification(DateTime.UtcNow.Date.AddDays(3), 7);
 
             // Act
-            var result = spec.IsSatisfiedBy(booking).Result.IsSuccess;
+            var result = spec.IsSatisfiedBy(booking).IsSuccess;
 
             // Assert
             Assert.False(result);

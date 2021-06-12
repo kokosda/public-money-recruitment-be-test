@@ -28,7 +28,7 @@ namespace VacationRental.Domain.Bookings
 
             foreach (var booking in bookings)
             {
-                if (bookingIntersectsWithDateRangeSpecification.IsSatisfiedBy(booking).Result.IsSuccess)
+                if (bookingIntersectsWithDateRangeSpecification.IsSatisfiedBy(booking).IsSuccess)
                     unitsInBookings++;
             }
             
