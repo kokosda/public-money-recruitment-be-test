@@ -78,23 +78,23 @@ namespace VacationRental.Api.Tests
                 Assert.Equal(rentalId, getCalendarResult.RentalId);
                 Assert.Equal(5, getCalendarResult.Dates.Count);
 
-                Assert.Equal(new DateTime(2000, 01, 01), getCalendarResult.Dates[0].Date);
+                Assert.Equal(new DateTime(2000, 01, 01).ToUniversalTime().Date, getCalendarResult.Dates[0].Date);
                 Assert.Empty(getCalendarResult.Dates[0].Bookings);
                 
-                Assert.Equal(new DateTime(2000, 01, 02), getCalendarResult.Dates[1].Date);
+                Assert.Equal(new DateTime(2000, 01, 02).ToUniversalTime().Date, getCalendarResult.Dates[1].Date);
                 Assert.Single(getCalendarResult.Dates[1].Bookings);
                 Assert.Contains(getCalendarResult.Dates[1].Bookings, x => x.BookingId == bookingId1);
                 
-                Assert.Equal(new DateTime(2000, 01, 03), getCalendarResult.Dates[2].Date);
+                Assert.Equal(new DateTime(2000, 01, 03).ToUniversalTime().Date, getCalendarResult.Dates[2].Date);
                 Assert.Equal(2, getCalendarResult.Dates[2].Bookings.Count);
                 Assert.Contains(getCalendarResult.Dates[2].Bookings, x => x.BookingId == bookingId1);
                 Assert.Contains(getCalendarResult.Dates[2].Bookings, x => x.BookingId == bookingId2);
                 
-                Assert.Equal(new DateTime(2000, 01, 04), getCalendarResult.Dates[3].Date);
+                Assert.Equal(new DateTime(2000, 01, 04).ToUniversalTime().Date, getCalendarResult.Dates[3].Date);
                 Assert.Single(getCalendarResult.Dates[3].Bookings);
                 Assert.Contains(getCalendarResult.Dates[3].Bookings, x => x.BookingId == bookingId2);
                 
-                Assert.Equal(new DateTime(2000, 01, 05), getCalendarResult.Dates[4].Date);
+                Assert.Equal(new DateTime(2000, 01, 05).ToUniversalTime().Date, getCalendarResult.Dates[4].Date);
                 Assert.Empty(getCalendarResult.Dates[4].Bookings);
             }
         }

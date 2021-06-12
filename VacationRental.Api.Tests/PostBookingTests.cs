@@ -59,7 +59,7 @@ namespace VacationRental.Api.Tests
                 var getBookingResult = await getBookingResponse.Content.ReadAsAsync<BookingDto>();
                 Assert.Equal(postBookingRequest.RentalId, getBookingResult.RentalId);
                 Assert.Equal(postBookingRequest.Nights, getBookingResult.Nights);
-                Assert.Equal(postBookingRequest.Start, getBookingResult.Start);
+                Assert.Equal(postBookingRequest.Start.ToUniversalTime().Date, getBookingResult.Start);
             }
         }
 
