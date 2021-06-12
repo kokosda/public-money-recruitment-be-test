@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace VacationRental.Application.Rentals
 {
@@ -6,5 +7,8 @@ namespace VacationRental.Application.Rentals
     {
         [Range(1, int.MaxValue)]
         public int Units { get; set; }
+        
+        [Range(0, Int32.MaxValue)]
+        public int PreparationTimeInDays { get; set; }
     }
 }

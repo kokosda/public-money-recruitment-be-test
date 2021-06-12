@@ -18,7 +18,11 @@ namespace VacationRental.Application.Rentals
         protected override async Task<IResponseContainerWithValue<RentalDto>> GetResultAsync(CreateRentalRequest command)
         {
             var result = new ResponseContainerWithValue<RentalDto>();
-            var rental = new Rental { Units = command.Units };
+            var rental = new Rental
+            {
+                Units = command.Units, 
+                PreparationTimeInDays = command.PreparationTimeInDays
+            };
             
             rental = await _rentalRepository.CreateAsync(rental);
             result.SetSuccessValue(rental.ToDto());
