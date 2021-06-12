@@ -23,6 +23,7 @@ namespace VacationRental.Domain.Calendars
                 throw new ArgumentNullException(nameof(rental));
 
             var result = new ResponseContainerWithValue<Calendar>();
+            var startDateInUtc = start.ToUniversalTime().Date;
             var calendar = new Calendar
             {
                 RentalId = rental.Id,
@@ -35,7 +36,7 @@ namespace VacationRental.Domain.Calendars
             {
                 var calendarDate = new CalendarDate
                 {
-                    Date = start.Date.AddDays(i),
+                    Date = startDateInUtc.AddDays(i),
                     CalendarBookings = new List<CalendarBooking>()
                 };
 

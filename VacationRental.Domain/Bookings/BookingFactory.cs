@@ -20,8 +20,9 @@ namespace VacationRental.Domain.Bookings
             if (rental == null)
                 throw new ArgumentNullException(nameof(rental));
 
+            var startDateInUtc = startDate.ToUniversalTime().Date;
             var result = new ResponseContainerWithValue<Booking>();
-            var createBookingSpecification = new CreateBookingSpecification(startDate.Date, nights);
+            var createBookingSpecification = new CreateBookingSpecification(startDateInUtc, nights);
             var bookings = await _bookingRepository.GetBookingsByRentalIdAsync(rental.Id);
             
             for (var i = 0; i < nights; i++)
@@ -36,7 +37,7 @@ namespace VacationRental.Domain.Bookings
                 
                 if (count >= rental.Units)
                 {
-                    result.AddErrorMessage($"Booking is not available for given start date {startDate} and {nights} night(s)");
+                    result.AddErrorMessage($"Booking is not available for given start date {startDateInUtc} and {nights} night(s)");
                     return result;
                 }
             }
@@ -45,7 +46,7 @@ namespace VacationRental.Domain.Bookings
             {
                 Nights = nights,
                 RentalId = rental.Id,
-                StartDate = startDate.Date
+                StartDate = startDateInUtc
             };
 
             result.SetSuccessValue(newBooking);
