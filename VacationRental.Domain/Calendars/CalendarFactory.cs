@@ -32,11 +32,11 @@ namespace VacationRental.Domain.Calendars
 
             var bookings = await _bookingRepository.GetBookingsByRentalIdAsync(rental.Id);
             
-            for (var i = 0; i < nights; i++)
+            for (var night = 0; night < nights; night++)
             {
                 var calendarDate = new CalendarDate
                 {
-                    Date = startDateInUtc.AddDays(i),
+                    Date = startDateInUtc.AddDays(night),
                     CalendarBookings = new List<CalendarBooking>()
                 };
 
