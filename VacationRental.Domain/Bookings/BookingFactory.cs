@@ -22,13 +22,13 @@ namespace VacationRental.Domain.Bookings
 
             var startDateInUtc = startDate.ToUniversalTime().Date;
             var result = new ResponseContainerWithValue<Booking>();
-            var createBookingSpecification = new CreateBookingSpecification(startDateInUtc, nights);
+            var bookingIntersectsWithDateRangeSpecification = new BookingIntersectsWithDateRangeSpecification(startDateInUtc, nights);
             var bookings = await _bookingRepository.GetBookingsByRentalIdAsync(rental.Id);
             var unitsInBookings = 0;
 
             foreach (var booking in bookings)
             {
-                if (createBookingSpecification.IsSatisfiedBy(booking).Result.IsSuccess)
+                if (bookingIntersectsWithDateRangeSpecification.IsSatisfiedBy(booking).Result.IsSuccess)
                     unitsInBookings++;
             }
             

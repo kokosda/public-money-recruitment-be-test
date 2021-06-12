@@ -9,6 +9,8 @@ namespace VacationRental.Domain.Bookings
         public int RentalId { get; set; }
         public DateTime StartDate { get; set; }
 
+        public DateTime EndDate => StartDate.AddDays(Nights);
+
         public override string ToString()
         {
             return $"{StartDate}, {nameof(Nights)} {Nights}, {nameof(RentalId)} {RentalId}";
