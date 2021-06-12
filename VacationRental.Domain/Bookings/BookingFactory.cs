@@ -41,7 +41,7 @@ namespace VacationRental.Domain.Bookings
             var newBooking = new Booking
             {
                 Nights = nights,
-                RentalId = rental.Id,
+                Rental = rental,
                 StartDate = startDateInUtc
             };
 
