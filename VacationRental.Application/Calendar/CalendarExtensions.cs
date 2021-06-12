@@ -37,7 +37,7 @@ namespace VacationRental.Application.Calendar
             if (calendarBooking == null)
                 throw new ArgumentNullException(nameof(calendarBooking));
             
-            var result = new CalendarBookingDto { BookingId = calendarBooking.BookingId };
+            var result = new CalendarBookingDto { BookingId = calendarBooking.Id };
             return result;
         }
     }

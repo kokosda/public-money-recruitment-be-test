@@ -46,7 +46,7 @@ namespace VacationRental.Domain.Calendars
                 {
                     if (calendarDateIsWithinBookingDateRangeSpecification.IsSatisfiedBy(booking).IsSuccess)
                     {
-                        calendarDate.CalendarBookings.Add(new CalendarBooking { BookingId = booking.Id });
+                        calendarDate.CalendarBookings.Add(new CalendarBooking { Id = booking.Id });
                     }
                 }
 

@@ -4,6 +4,9 @@ namespace VacationRental.Domain.Calendars
 {
     public sealed class CalendarBooking : ValueObject
     {
-        public int BookingId { get; set; }
+        /// <summary>
+        /// BookingId
+        /// </summary>
+        public int Id { get; set; }
     }
 }
