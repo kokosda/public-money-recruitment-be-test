@@ -7,5 +7,10 @@ namespace VacationRental.Domain.Calendars
     {
         public int RentalId { get; set; }
         public List<CalendarDate> Dates { get; set; }
+
+        public Calendar()
+        {
+            Dates = new List<CalendarDate>();
+        }
     }
 }

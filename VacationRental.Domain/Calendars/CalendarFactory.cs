@@ -26,8 +26,7 @@ namespace VacationRental.Domain.Calendars
             var startDateInUtc = start.ToUniversalTime().Date;
             var calendar = new Calendar
             {
-                RentalId = rental.Id,
-                Dates = new List<CalendarDate>() 
+                RentalId = rental.Id
             };
 
             var bookings = await _bookingRepository.GetBookingsByRentalIdAsync(rental.Id);
@@ -36,8 +35,7 @@ namespace VacationRental.Domain.Calendars
             {
                 var calendarDate = new CalendarDate
                 {
-                    Date = startDateInUtc.AddDays(night),
-                    CalendarBookings = new List<CalendarBooking>()
+                    Date = startDateInUtc.AddDays(night)
                 };
 
                 var calendarDateIsWithinBookingDateRangeSpecification = new CalendarDateIsWithinBookingDateRangeSpecification(calendarDate);
@@ -47,6 +45,7 @@ namespace VacationRental.Domain.Calendars
                     if (calendarDateIsWithinBookingDateRangeSpecification.IsSatisfiedBy(booking).IsSuccess)
                     {
                         calendarDate.CalendarBookings.Add(new CalendarBooking { Id = booking.Id });
+                        calendarDate.PreparationTimes.Add(new PreparationTime { Unit = booking.Unit });
                     }
                 }
 

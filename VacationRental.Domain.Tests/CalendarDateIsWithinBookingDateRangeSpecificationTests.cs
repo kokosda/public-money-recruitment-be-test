@@ -1,6 +1,7 @@
 using System;
 using VacationRental.Domain.Bookings;
 using VacationRental.Domain.Calendars;
+using VacationRental.Domain.Rentals;
 using Xunit;
 
 namespace VacationRental.Domain.Tests
@@ -8,11 +9,15 @@ namespace VacationRental.Domain.Tests
     [Collection("Common")]
     public sealed class CalendarDateIsWithinBookingDateRangeSpecificationTests
     {
-        [Fact]
-        public void CalendarDateIsWithinBookingDateRangeSpecification_BelongsToStartDate_ReturnsTrue()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(5)]
+        public void CalendarDateIsWithinBookingDateRangeSpecification_BelongsToStartDate_ReturnsTrue(int preparationTimeInDays)
         {
             // Arrange
-            var booking = new Booking { StartDate = DateTime.UtcNow.Date, Nights = 2 };
+            var rental = new Rental { PreparationTimeInDays = preparationTimeInDays };
+            var booking = new Booking(rental) { StartDate = DateTime.UtcNow.Date, Nights = 2 };
             var calendarDate = new CalendarDate { Date = DateTime.UtcNow.Date };
             var spec = new CalendarDateIsWithinBookingDateRangeSpecification(calendarDate);
 
@@ -23,11 +28,15 @@ namespace VacationRental.Domain.Tests
             Assert.True(result);
         }
         
-        [Fact]
-        public void CalendarDateIsWithinBookingDateRangeSpecification_InTheMiddle_ReturnsTrue()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(5)]
+        public void CalendarDateIsWithinBookingDateRangeSpecification_InTheMiddle_ReturnsTrue(int preparationTimeInDays)
         {
             // Arrange
-            var booking = new Booking { StartDate = DateTime.UtcNow.Date, Nights = 2 };
+            var rental = new Rental { PreparationTimeInDays = preparationTimeInDays };
+            var booking = new Booking(rental) { StartDate = DateTime.UtcNow.Date, Nights = 2 };
             var calendarDate = new CalendarDate { Date = DateTime.UtcNow.Date.AddDays(1) };
             var spec = new CalendarDateIsWithinBookingDateRangeSpecification(calendarDate);
 
@@ -38,11 +47,15 @@ namespace VacationRental.Domain.Tests
             Assert.True(result);
         }
         
-        [Fact]
-        public void CalendarDateIsWithinBookingDateRangeSpecification_BelongsToEndDate_ReturnsTrue()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(5)]
+        public void CalendarDateIsWithinBookingDateRangeSpecification_BelongsToEndDate_ReturnsTrue(int preparationTimeInDays)
         {
             // Arrange
-            var booking = new Booking { StartDate = DateTime.UtcNow.Date, Nights = 2 };
+            var rental = new Rental { PreparationTimeInDays = preparationTimeInDays };
+            var booking = new Booking(rental) { StartDate = DateTime.UtcNow.Date.AddDays(-preparationTimeInDays), Nights = 2 };
             var calendarDate = new CalendarDate { Date = DateTime.UtcNow.Date.AddDays(2) };
             var spec = new CalendarDateIsWithinBookingDateRangeSpecification(calendarDate);
 
@@ -53,11 +66,15 @@ namespace VacationRental.Domain.Tests
             Assert.False(result);
         }
         
-        [Fact]
-        public void CalendarDateIsWithinBookingDateRangeSpecification_IsBeforeStartDate_ReturnsFalse()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(5)]
+        public void CalendarDateIsWithinBookingDateRangeSpecification_IsBeforeStartDate_ReturnsFalse(int preparationTimeInDays)
         {
             // Arrange
-            var booking = new Booking { StartDate = DateTime.UtcNow.Date.AddDays(1), Nights = 3 };
+            var rental = new Rental { PreparationTimeInDays = preparationTimeInDays };
+            var booking = new Booking(rental) { StartDate = DateTime.UtcNow.Date.AddDays(1), Nights = 3 };
             var calendarDate = new CalendarDate { Date = DateTime.UtcNow.Date };
             var spec = new CalendarDateIsWithinBookingDateRangeSpecification(calendarDate);
 
@@ -68,12 +85,16 @@ namespace VacationRental.Domain.Tests
             Assert.False(result);
         }
         
-        [Fact]
-        public void CalendarDateIsWithinBookingDateRangeSpecification_IsAfterEndDate_ReturnsFalse()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(5)]
+        public void CalendarDateIsWithinBookingDateRangeSpecification_IsAfterEndDate_ReturnsFalse(int preparationTimeInDays)
         {
             // Arrange
-            var booking = new Booking { StartDate = DateTime.UtcNow.Date, Nights = 3 };
-            var calendarDate = new CalendarDate { Date = DateTime.UtcNow.Date.AddDays(4) };
+            var rental = new Rental { PreparationTimeInDays = preparationTimeInDays };
+            var booking = new Booking(rental) { StartDate = DateTime.UtcNow.Date, Nights = 3 };
+            var calendarDate = new CalendarDate { Date = DateTime.UtcNow.Date.AddDays(4 + preparationTimeInDays) };
             var spec = new CalendarDateIsWithinBookingDateRangeSpecification(calendarDate);
 
             // Act

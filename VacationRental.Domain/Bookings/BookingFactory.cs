@@ -14,38 +14,45 @@ namespace VacationRental.Domain.Bookings
         {
             _bookingRepository = bookingRepository;
         }
-        
+
         public async Task<IResponseContainerWithValue<Booking>> CreateBooking(Rental rental, DateTime startDate, int nights)
         {
             if (rental == null)
                 throw new ArgumentNullException(nameof(rental));
 
-            var startDateInUtc = startDate.ToUniversalTime().Date;
             var result = new ResponseContainerWithValue<Booking>();
-            var bookingIntersectsWithDateRangeSpecification = new BookingIntersectsWithDateRangeSpecification(startDateInUtc, nights);
-            var bookings = await _bookingRepository.GetBookingsByRentalIdAsync(rental.Id);
-            var unitsInBookings = 0;
+            var startDateInUtc = startDate.ToUniversalTime().Date;
+            var unitsInBookings = await GetUnitsInBookings(rental, startDateInUtc, nights);
 
-            foreach (var booking in bookings)
-            {
-                if (bookingIntersectsWithDateRangeSpecification.IsSatisfiedBy(booking).IsSuccess)
-                    unitsInBookings++;
-            }
-            
             if (unitsInBookings >= rental.Units)
             {
                 result.AddErrorMessage($"Booking is not available for given start date {startDateInUtc} and {nights} night(s)");
                 return result;
             }
-            
-            var newBooking = new Booking
+
+            var newBooking = new Booking(rental)
             {
                 Nights = nights,
-                Rental = rental,
-                StartDate = startDateInUtc
+                StartDate = startDateInUtc,
+                Unit = unitsInBookings + 1
             };
 
             result.SetSuccessValue(newBooking);
+            return result;
+        }
+
+        private async Task<int> GetUnitsInBookings(Rental rental, DateTime startDate, int nights)
+        {
+            var bookings = await _bookingRepository.GetBookingsByRentalIdAsync(rental.Id);
+            var bookingIntersectsWithDateRangeSpecification = new BookingIntersectsWithDateRangeSpecification(startDate, nights);
+            var result = 0;
+
+            foreach (var booking in bookings)
+            {
+                if (bookingIntersectsWithDateRangeSpecification.IsSatisfiedBy(booking).IsSuccess)
+                    result++;
+            }
+
             return result;
         }
     }

@@ -21,8 +21,7 @@ namespace VacationRental.Domain.Bookings
 
             if (booking.EndDate < _startDate || booking.StartDate > _endDate)
             {
-                result.AddErrorMessage(
-                    $"Booking {booking} does not intersect with date range [{_startDate} - {_endDate}].");
+                result.AddErrorMessage($"Booking {booking} does not intersect with date range [{_startDate} - {_endDate}].");
                 return result;
             }
 
