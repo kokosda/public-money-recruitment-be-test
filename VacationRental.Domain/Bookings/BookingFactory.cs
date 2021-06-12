@@ -24,22 +24,18 @@ namespace VacationRental.Domain.Bookings
             var result = new ResponseContainerWithValue<Booking>();
             var createBookingSpecification = new CreateBookingSpecification(startDateInUtc, nights);
             var bookings = await _bookingRepository.GetBookingsByRentalIdAsync(rental.Id);
-            
-            for (var i = 0; i < nights; i++)
+            var unitsInBookings = 0;
+
+            foreach (var booking in bookings)
             {
-                var count = 0;
-                
-                foreach (var booking in bookings)
-                {
-                    if (createBookingSpecification.IsSatisfiedBy(booking).Result.IsSuccess)
-                        count++;
-                }
-                
-                if (count >= rental.Units)
-                {
-                    result.AddErrorMessage($"Booking is not available for given start date {startDateInUtc} and {nights} night(s)");
-                    return result;
-                }
+                if (createBookingSpecification.IsSatisfiedBy(booking).Result.IsSuccess)
+                    unitsInBookings++;
+            }
+            
+            if (unitsInBookings >= rental.Units)
+            {
+                result.AddErrorMessage($"Booking is not available for given start date {startDateInUtc} and {nights} night(s)");
+                return result;
             }
             
             var newBooking = new Booking
