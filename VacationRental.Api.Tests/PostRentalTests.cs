@@ -16,12 +16,16 @@ namespace VacationRental.Api.Tests
             _client = fixture.Client;
         }
 
-        [Fact]
-        public async Task GivenCompleteRequest_WhenPostRental_ThenAGetReturnsTheCreatedRental()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(3)]
+        public async Task GivenCompleteRequest_WhenPostRental_ThenAGetReturnsTheCreatedRental(int preparationTimeInDays)
         {
             var request = new CreateRentalRequest
             {
-                Units = 25
+                Units = 25,
+                PreparationTimeInDays = preparationTimeInDays
             };
 
             var rentalId = 0;

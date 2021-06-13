@@ -16,6 +16,7 @@ namespace VacationRental.Infrastructure.DataAccess
         {
             var result = Keys.Where(k => k.StartsWith($"{EntityPrefix}."))
                 .Select(k => MemoryCache.Get<Booking>(k))
+                .Where(b => b.Rental.Id == rentalId)
                 .ToList();
             return Task.FromResult(result);
         }
