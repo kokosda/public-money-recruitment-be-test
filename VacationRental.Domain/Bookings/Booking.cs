@@ -33,8 +33,8 @@ namespace VacationRental.Domain.Bookings
 
             var result = Duration.IntersectsWith(dateRange);
 
-            if (UnitPreparationPeriod != null)
-                UnitPreparationPeriod.IntersectsWith(dateRange);
+            if (!result && UnitPreparationPeriod != null)
+                result = UnitPreparationPeriod.IntersectsWith(dateRange);
             
             return result;
         }
