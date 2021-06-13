@@ -27,7 +27,7 @@ namespace VacationRental.Application.Calendar
             var result = new CalendarDateDto
             {
                 Date = calendarDate.Date,
-                Bookings = calendarDate.CalendarBookings.Select(cb => cb.ToDto()).ToList()
+                Bookings = calendarDate.Bookings.Select(cb => cb.ToDto()).ToList()
             };
             return result;
         }

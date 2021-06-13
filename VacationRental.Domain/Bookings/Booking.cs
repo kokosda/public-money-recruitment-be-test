@@ -1,27 +1,53 @@
 ﻿using System;
 using VacationRental.Core.Domain;
+using VacationRental.Domain.DateRanges;
 using VacationRental.Domain.Rentals;
 
 namespace VacationRental.Domain.Bookings
 {
     public sealed class Booking : EntityBase<int>
     {
-        public int Nights { get; set; }
-
-        public Rental Rental { get; set; }
-
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate => StartDate.AddDays(Nights + Rental.PreparationTimeInDays);
+        public int Nights { get; }
+        public Rental Rental { get; }
+        public DateTime StartDate { get; }
+        public DateTime EndDate => StartDate.AddDays(Nights);
         public int Unit { get; set; }
-        
-        public Booking(Rental rental)
+        public DateRange Duration { get; }
+        public DateRange UnitPreparationPeriod { get; }
+
+        public Booking(Rental rental, DateTime startDate, int nights)
         {
             Rental = rental ?? throw new ArgumentNullException(nameof(rental));
+            StartDate = startDate;
+            Nights = nights;
+            Duration = new DateRange(startDate, nights);
+            UnitPreparationPeriod = new DateRange(EndDate, rental.PreparationTimeInDays);
+        }
+
+        public bool IntersectsWith(DateRange dateRange)
+        {
+            if (dateRange == null)
+                throw new ArgumentNullException(nameof(dateRange));
+
+            var result = Duration.IntersectsWith(dateRange);
+            return result;
+        }
+
+        public bool IntersectsByDurationOnDate(DateTime date)
+        {
+            var result = Duration.IncludesDate(date);
+            return result;
+        }
+
+        public bool IntersectsByUnitPreparationPeriodOnDate(DateTime date)
+        {
+            var result = UnitPreparationPeriod.IncludesDate(date);
+            return result;
         }
 
         public override string ToString()
         {
-            return $"{StartDate}, {nameof(Nights)} {Nights}, {nameof(Rental)} {Rental.Id}";
+            return $"{StartDate}, {nameof(Nights)} {Nights}, {nameof(UnitPreparationPeriod)} {UnitPreparationPeriod}, {nameof(Rental)} {Rental.Id}";
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using VacationRental.Core.Interfaces;
 using VacationRental.Core.ResponseContainers;
@@ -16,10 +15,11 @@ namespace VacationRental.Domain.Calendars
         {
             _bookingRepository = bookingRepository;
         }
-        
-        public async Task<IResponseContainerWithValue<Calendar>> CreateCalendar(Rental rental, DateTime start, int nights)
+
+        public async Task<IResponseContainerWithValue<Calendar>> CreateCalendar(Rental rental, DateTime start,
+            int nights)
         {
-            if (rental == null) 
+            if (rental == null)
                 throw new ArgumentNullException(nameof(rental));
 
             var result = new ResponseContainerWithValue<Calendar>();
@@ -30,7 +30,7 @@ namespace VacationRental.Domain.Calendars
             };
 
             var bookings = await _bookingRepository.GetBookingsByRentalIdAsync(rental.Id);
-            
+
             for (var night = 0; night < nights; night++)
             {
                 var calendarDate = new CalendarDate
@@ -38,20 +38,15 @@ namespace VacationRental.Domain.Calendars
                     Date = startDateInUtc.AddDays(night)
                 };
 
-                var calendarDateIsWithinBookingDateRangeSpecification = new CalendarDateIsWithinBookingDateRangeSpecification(calendarDate);
-
                 foreach (var booking in bookings)
-                {
-                    if (calendarDateIsWithinBookingDateRangeSpecification.IsSatisfiedBy(booking).IsSuccess)
-                    {
-                        calendarDate.CalendarBookings.Add(new CalendarBooking { Id = booking.Id });
+                    if (booking.IntersectsByDurationOnDate(calendarDate.Date))
+                        calendarDate.Bookings.Add(new CalendarBooking { Id = booking.Id });
+                    else if (booking.IntersectsByUnitPreparationPeriodOnDate(calendarDate.Date))
                         calendarDate.PreparationTimes.Add(new PreparationTime { Unit = booking.Unit });
-                    }
-                }
 
                 calendar.Dates.Add(calendarDate);
             }
-            
+
             result.SetSuccessValue(calendar);
             return result;
         }

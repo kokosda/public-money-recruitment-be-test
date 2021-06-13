@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using VacationRental.Core.Interfaces;
 using VacationRental.Core.ResponseContainers;
+using VacationRental.Domain.DateRanges;
 using VacationRental.Domain.Rentals;
 
 namespace VacationRental.Domain.Bookings
@@ -30,10 +31,8 @@ namespace VacationRental.Domain.Bookings
                 return result;
             }
 
-            var newBooking = new Booking(rental)
+            var newBooking = new Booking(rental, startDateInUtc, nights)
             {
-                Nights = nights,
-                StartDate = startDateInUtc,
                 Unit = unitsInBookings + 1
             };
 
@@ -43,13 +42,13 @@ namespace VacationRental.Domain.Bookings
 
         private async Task<int> GetUnitsInBookings(Rental rental, DateTime startDate, int nights)
         {
-            var bookings = await _bookingRepository.GetBookingsByRentalIdAsync(rental.Id);
-            var bookingIntersectsWithDateRangeSpecification = new BookingIntersectsWithDateRangeSpecification(startDate, nights);
             var result = 0;
+            var bookings = await _bookingRepository.GetBookingsByRentalIdAsync(rental.Id);
+            var newBookingDateRange = new DateRange(startDate, nights);
 
             foreach (var booking in bookings)
             {
-                if (bookingIntersectsWithDateRangeSpecification.IsSatisfiedBy(booking).IsSuccess)
+                if (booking.IntersectsWith(newBookingDateRange))
                     result++;
             }
 

@@ -15,7 +15,8 @@ namespace VacationRental.Application.Bookings
                 Id = booking.Id,
                 Nights = booking.Nights,
                 Start = booking.StartDate,
-                RentalId = booking.Rental.Id
+                RentalId = booking.Rental.Id,
+                Unit = booking.Unit
             };
             return result;
         }
