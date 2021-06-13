@@ -42,7 +42,7 @@ namespace VacationRental.Api.Controllers
             if (!responseContainer.IsSuccess)
                 return UnprocessableEntity(responseContainer.Messages);
             
-            return Created(new Uri($"/bookins/{responseContainer.Value.Id}", UriKind.Relative), null);
+            return Created(new Uri($"/bookings/{responseContainer.Value.Id}", UriKind.Relative), null);
         }
     }
 }
