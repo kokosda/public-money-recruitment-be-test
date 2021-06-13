@@ -13,7 +13,7 @@ namespace VacationRental.Domain.Bookings
         public DateTime EndDate => StartDate.AddDays(Nights);
         public int Unit { get; set; }
         public DateRange Duration { get; }
-        public DateRange UnitPreparationPeriod { get; }
+        private DateRange UnitPreparationPeriod { get; }
 
         public Booking(Rental rental, DateTime startDate, int nights)
         {
@@ -21,7 +21,9 @@ namespace VacationRental.Domain.Bookings
             StartDate = startDate;
             Nights = nights;
             Duration = new DateRange(startDate, nights);
-            UnitPreparationPeriod = new DateRange(EndDate, rental.PreparationTimeInDays);
+            
+            if (rental.PreparationTimeInDays > 0)
+                UnitPreparationPeriod = new DateRange(EndDate, rental.PreparationTimeInDays);
         }
 
         public bool IntersectsWith(DateRange dateRange)
@@ -30,6 +32,10 @@ namespace VacationRental.Domain.Bookings
                 throw new ArgumentNullException(nameof(dateRange));
 
             var result = Duration.IntersectsWith(dateRange);
+
+            if (UnitPreparationPeriod != null)
+                UnitPreparationPeriod.IntersectsWith(dateRange);
+            
             return result;
         }
 
@@ -41,6 +47,9 @@ namespace VacationRental.Domain.Bookings
 
         public bool IntersectsByUnitPreparationPeriodOnDate(DateTime date)
         {
+            if (UnitPreparationPeriod == null)
+                return false;
+            
             var result = UnitPreparationPeriod.IncludesDate(date);
             return result;
         }
