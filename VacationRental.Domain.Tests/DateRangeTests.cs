@@ -1,7 +1,6 @@
 ﻿using System;
 using VacationRental.Domain.DateRanges;
 using Xunit;
-using Xunit.Sdk;
 
 namespace VacationRental.Domain.Tests
 {
@@ -18,7 +17,7 @@ namespace VacationRental.Domain.Tests
         {
             // Arrange
             var dateRange1 = new DateRange(startDate1, periodInDays1);
-            var dateRange2 = new DateRange(startDate2, periodInDays2); 
+            var dateRange2 = new DateRange(startDate2, periodInDays2);
 
             // Act
             var result = dateRange1.IntersectsWith(dateRange2);
@@ -38,7 +37,8 @@ namespace VacationRental.Domain.Tests
         [Theory]
         [InlineData("2000-01-01", 1, "2000-01-01", true)]
         [InlineData("2000-01-01", 1, "2000-01-02", false)]
-        public void IncludesDate_(DateTime startDate, int periodInDays, DateTime checkingDate, bool expected)
+        [InlineData("2000-01-02", 1, "2000-01-01", false)]
+        public void IncludesDate_ChecksDateAgainstRange_ReturnsExpected(DateTime startDate, int periodInDays, DateTime checkingDate, bool expected)
         {
             // Arrange
             var dateRange = new DateRange(startDate, periodInDays);
