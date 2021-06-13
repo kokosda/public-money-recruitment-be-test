@@ -27,7 +27,8 @@ namespace VacationRental.Application.Calendar
             var result = new CalendarDateDto
             {
                 Date = calendarDate.Date,
-                Bookings = calendarDate.Bookings.Select(cb => cb.ToDto()).ToList()
+                Bookings = calendarDate.Bookings.Select(cb => cb.ToDto()).ToList(),
+                PreparationTimes = calendarDate.PreparationTimes.Select(pt => pt.ToDto()).ToList()
             };
             return result;
         }
@@ -38,6 +39,15 @@ namespace VacationRental.Application.Calendar
                 throw new ArgumentNullException(nameof(calendarBooking));
             
             var result = new CalendarBookingDto { BookingId = calendarBooking.Id };
+            return result;
+        }
+
+        private static PreparationTimeDto ToDto(this PreparationTime preparationTime)
+        {
+            if (preparationTime == null)
+                throw new ArgumentNullException(nameof(preparationTime));
+
+            var result = new PreparationTimeDto { Unit = preparationTime.Unit };
             return result;
         }
     }
