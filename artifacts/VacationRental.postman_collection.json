@@ -1,0 +1,140 @@
+{
+	"info": {
+		"_postman_id": "4340e8ca-a490-442b-ac28-f2920588faec",
+		"name": "VacationRental",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Calendar",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/calendar?rentalId=1&start=2000-01-01&nights=10",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"calendar"
+					],
+					"query": [
+						{
+							"key": "rentalId",
+							"value": "1"
+						},
+						{
+							"key": "start",
+							"value": "2000-01-01"
+						},
+						{
+							"key": "nights",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Booking - GetById Copy",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/rentals/{{id}}?rentalId=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"rentals",
+						"{{id}}"
+					],
+					"query": [
+						{
+							"key": "rentalId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rental - GetById Copy",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/rentals/{{id}}?rentalId=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"rentals",
+						"{{id}}"
+					],
+					"query": [
+						{
+							"key": "rentalId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rental - Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Units\": 1,\r\n    \"PreparationTimeInDays\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/rentals",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"rentals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Booking - Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RentalId\": 1,\r\n    \"Start\": \"2000-01-07\",\r\n    \"Nights\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/bookings",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"bookings"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
